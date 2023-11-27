@@ -19,20 +19,28 @@ else
 fi
 
 cp student-submission/* grading-area 
+cp TestListExamples.java grading-area
+
 cd grading-area
 
-javac -cp $CPATH ListExamples.java 2>ListExamplesErrorOutput.txt
+javac -cp $CPATH ListExamples.java TestListExamples.java
+
 if [[ $? -eq 0 ]]
 then 
     echo "Compiled correctly."
-    javac -cp $CPATH org.junit.runner.JUnitCore ../TestListExamples.java >JUnitOutput.txt 2>&1  # something here is not working
-    java -cp $CPATH org.junit.runner.JUnitCore ../TestListExamples >>JUnitOutput.txt 2>&1
+    java -cp $CPATH org.junit.runner.JUnitCore TestListExamples >JUnitOutput.txt 2>&1
 else 
     echo "Failed to compile."
     exit 1
 fi 
 
-
+if [ grep "OK" JUnitOutput.txt ]
+then 
+    echo "All tests passed: 100%"
+else 
+    echo "Tests failed: Incomplete"
+    exit 1
+fi
 
 # Draw a picture/take notes on the directory structure that's set up after
 # getting to this point
